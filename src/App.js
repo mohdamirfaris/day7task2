@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react'
+import './App.css'
 
 function App() {
+
+  //hook for getting the api
+  const [birthData, setBirthData]= useState([]);
+
+  //hook for running the api
+  useEffect(()=>{
+    //to get the api
+    fetch("https://api.data.gov.my/data-catalogue/?id=births&limit=50").then((response)=>response.json()).then((birthData)=>{
+      setBirthData(birthData);
+    }).catch((e)=>{
+      console.log("There is something wrong")
+    })
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+
+      <table>
+        <tr>
+          <th>Date</th>
+          <th>State</th>
+          <th>Births</th>
+        </tr>
+        {
+          //take data from api to insert into our table
+          birthData.map((birth)=>(
+            <tr>
+              <td>{birth.date}</td>
+              <td>{birth.state}</td>
+              <td>{birth.births}</td>
+            </tr>
+          ))
+        }
+      </table>
+
     </div>
-  );
+  )
 }
 
 export default App;
